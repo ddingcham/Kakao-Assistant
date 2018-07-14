@@ -27,7 +27,7 @@ public class KakaoMessage {
         return messageButton;
     }
 
-    public class Builder {
+    public static class Builder {
 
         private KakaoMessage message;
 

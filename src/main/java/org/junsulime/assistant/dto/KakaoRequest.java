@@ -33,4 +33,12 @@ public class KakaoRequest {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public String toString() {
+        return "KakaoRequest{" +
+                ", type='" + type + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }
