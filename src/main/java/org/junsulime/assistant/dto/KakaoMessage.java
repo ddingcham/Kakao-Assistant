@@ -1,6 +1,9 @@
 package org.junsulime.assistant.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Objects;
 
 public class KakaoMessage {
 
@@ -8,11 +11,16 @@ public class KakaoMessage {
 
     private KakaoPhoto photo;
 
-    @JsonAlias("message_button")
+    @JsonProperty("message_button")
     private KakaoMessageButton messageButton;
 
     private KakaoMessage() {
 
+    }
+
+    private void checkValid() {
+        if (Objects.isNull(text) && Objects.isNull(photo) && Objects.isNull(messageButton))
+            throw new IllegalStateException("메세지에 text, photo, messageButton 중 하나는 들어가야 합니다.");
     }
 
     public String getText() {
@@ -51,6 +59,7 @@ public class KakaoMessage {
         }
 
         public KakaoMessage build() {
+            message.checkValid();
             return message;
         }
     }

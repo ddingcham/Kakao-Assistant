@@ -14,4 +14,12 @@ public class KakaoResponse {
         this.message = message;
         this.keyboard = keyboard;
     }
+
+    public KakaoMessage getMessage() {
+        return message;
+    }
+
+    public KakaoKeyboard getKeyboard() {
+        return keyboard;
+    }
 }

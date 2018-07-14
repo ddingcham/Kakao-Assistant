@@ -1,9 +1,10 @@
 package org.junsulime.assistant.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class KakaoRequest {
-    @JsonAlias("user_key")
+    @JsonProperty("user_key")
     private String userKey;
 
     private String type;
@@ -37,7 +38,7 @@ public class KakaoRequest {
     @Override
     public String toString() {
         return "KakaoRequest{" +
-                ", type='" + type + '\'' +
+                "type='" + type + '\'' +
                 ", content='" + content + '\'' +
                 '}';
     }
