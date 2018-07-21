@@ -1,4 +1,4 @@
-package org.junsulime.assistant.game.ladder;
+package org.junsulime.assistant.function.game.ladder;
 
 public class Ladder {
     private static final int LADDER_WIDTH = 5;

@@ -1,4 +1,4 @@
-package org.junsulime.assistant.game.ladder;
+package org.junsulime.assistant.function.game.ladder;
 
 import org.junsulime.assistant.validation.WrongMessageException;
 
