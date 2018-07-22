@@ -6,6 +6,11 @@ public class KakaoResponse {
 
     private KakaoKeyboard keyboard;
 
+    // default constructor for java bean
+    public KakaoResponse() {
+
+    }
+
     public KakaoResponse(KakaoMessage message) {
         this(message, null);
     }
@@ -21,5 +26,12 @@ public class KakaoResponse {
 
     public KakaoKeyboard getKeyboard() {
         return keyboard;
+    }
+
+    public static KakaoResponse simpleTextMessage(String text) {
+        KakaoMessage message = new KakaoMessage.Builder()
+                .setText(text)
+                .build();
+        return new KakaoResponse(message);
     }
 }

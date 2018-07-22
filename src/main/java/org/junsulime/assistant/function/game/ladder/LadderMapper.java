@@ -1,5 +1,6 @@
 package org.junsulime.assistant.function.game.ladder;
 
+
 import org.junsulime.assistant.validation.WrongMessageException;
 
 import java.util.ArrayList;

@@ -4,11 +4,19 @@ import org.junsulime.assistant.dto.KakaoKeyboard;
 import org.junsulime.assistant.dto.KakaoMessage;
 import org.junsulime.assistant.dto.KakaoRequest;
 import org.junsulime.assistant.dto.KakaoResponse;
-import org.springframework.http.ResponseEntity;
+import org.junsulime.assistant.function.Function;
+import org.junsulime.assistant.function.NotSelectFunctionException;
+import org.junsulime.assistant.service.KakaoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 public class KakaoController {
+
+    @Autowired
+    private KakaoService kakaoService;
 
     @GetMapping("/keyboard")
     public KakaoKeyboard hello() {
@@ -16,12 +24,8 @@ public class KakaoController {
     }
 
     @PostMapping("/message")
-    public KakaoResponse message(@RequestBody KakaoRequest request) {
-        KakaoMessage message = new KakaoMessage.Builder()
-                .setText(request.toString())
-                .build();
-
-        return new KakaoResponse(message);
+    public KakaoResponse message(@RequestBody KakaoRequest request) throws IOException {
+        return kakaoService.handleMessage(request);
     }
 
     @PostMapping("/friend")
