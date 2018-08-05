@@ -1,45 +1,70 @@
 package org.junsulime.assistant.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junsulime.assistant.dto.KakaoMessage;
 import org.junsulime.assistant.dto.KakaoRequest;
 import org.junsulime.assistant.dto.KakaoResponse;
 import org.junsulime.assistant.function.Function;
+import org.junsulime.assistant.function.FunctionResult;
 import org.junsulime.assistant.function.UserState;
+import org.junsulime.assistant.validation.WrongMessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundValueOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Optional;
 
-// <Service 사용의 의의>
-//
-// Transaction 단위의 method 처리
-// 여러 controller 에서 사용하는 경우 중복코드 제거
 @Service
 public class KakaoService {
-
     private Logger logger = LoggerFactory.getLogger(KakaoService.class);
 
-    private ObjectMapper mapper;
+    // TODO: instead of redisTemplate
+    @Resource(name = "userDataMap")
+    private HashMap<String, String> userDataMap;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
+    @Resource(name = "functionMap")
+    private HashMap<String, Function> functionMap;
 
-    // 모든 message handling 은 database 를 참조해야 하기 때문에
-    // service 영역에서 handling method 를 만들었다.
+    @Resource(name = "objectMapper")
+    private ObjectMapper objectMapper;
+
     public KakaoResponse handleMessage(KakaoRequest request) throws IOException {
-        logger.debug("redisTemplate: {}", redisTemplate);
-//        BoundValueOperations<String, String> userOperation = redisTemplate.boundValueOps(request.getUserKey());
-//        Optional<String> maybeUserData = Optional.ofNullable(userOperation.get());
-//        if (maybeUserData.isPresent()) {
-//
-//        }
+        if (userDataMap.containsKey(request.getUserKey())) {
+            return handleFunctionPlay(request);
+        }
+        return handleFunctionStart(request);
+    }
 
-        return KakaoResponse.simpleTextMessage("Hello World");
+    private KakaoResponse handleFunctionStart(KakaoRequest request) throws IOException {
+        Function function = Optional.ofNullable(functionMap.get(request.getContent()))
+                .orElseThrow(() -> new WrongMessageException(request.getUserKey(), "지원하지 않는 기능입니다."));
+        FunctionResult result = function.start();
+
+        UserState state = new UserState(request.getUserKey(), request.getContent(), result.getNextPhase(), result.getData());
+        userDataMap.put(request.getUserKey(), objectMapper.writeValueAsString(state));
+
+        return new KakaoResponse(result.getMessage());
+    }
+
+    private KakaoResponse handleFunctionPlay(KakaoRequest request) throws IOException {
+        String data = userDataMap.get(request.getUserKey());
+        UserState state = objectMapper.readValue(data, UserState.class);
+
+        Function function = functionMap.get(state.getFunction());
+        FunctionResult result = function.play(request.getContent(), state);
+
+        if (result.getNextPhase() == Function.END_PHASE) {
+            userDataMap.remove(request.getUserKey());
+            return new KakaoResponse(result.getMessage());
+        }
+
+        state.setPhase(result.getNextPhase());
+        state.setExtra(result.getData());
+
+        userDataMap.put(request.getUserKey(), objectMapper.writeValueAsString(state));
+
+        return new KakaoResponse(result.getMessage());
     }
 }

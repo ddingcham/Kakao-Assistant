@@ -1,6 +1,5 @@
 package org.junsulime.assistant.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
@@ -18,9 +17,10 @@ public class KakaoMessage {
 
     }
 
-    private void checkValid() {
-        if (Objects.isNull(text) && Objects.isNull(photo) && Objects.isNull(messageButton))
-            throw new IllegalStateException("메세지에 text, photo, messageButton 중 하나는 들어가야 합니다.");
+    private KakaoMessage(String text, KakaoPhoto photo, KakaoMessageButton messageButton) {
+        this.text = text;
+        this.photo = photo;
+        this.messageButton = messageButton;
     }
 
     public String getText() {
@@ -35,32 +35,43 @@ public class KakaoMessage {
         return messageButton;
     }
 
+    public static KakaoMessage textMessage(String text) {
+        KakaoMessage kakaoMessage = new KakaoMessage();
+        kakaoMessage.text = text;
+        return kakaoMessage;
+    }
+
     public static class Builder {
 
-        private KakaoMessage message;
+        private String text;
 
-        public Builder() {
-            message = new KakaoMessage();
-        }
+        private KakaoPhoto photo;
+
+        private KakaoMessageButton messageButton;
 
         public Builder setText(String text) {
-            message.text = text;
+            this.text = text;
             return this;
         }
 
         public Builder setPhoto(KakaoPhoto photo) {
-            message.photo = photo;
+            this.photo = photo;
             return this;
         }
 
         public Builder setMessageButton(KakaoMessageButton messageButton) {
-            message.messageButton = messageButton;
+            this.messageButton = messageButton;
             return this;
         }
 
+        private void checkValid() {
+            if (Objects.isNull(text) && Objects.isNull(photo) && Objects.isNull(messageButton))
+                throw new IllegalStateException("메세지에 text, photo, messageButton 중 하나는 들어가야 합니다.");
+        }
+
         public KakaoMessage build() {
-            message.checkValid();
-            return message;
+            checkValid();
+            return new KakaoMessage(text, photo, messageButton);
         }
     }
 }

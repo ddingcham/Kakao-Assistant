@@ -4,7 +4,7 @@ public class Ladder {
     private static final int LADDER_WIDTH = 5;
     private static final int LADDER_EMPTY = ' ';
     private static final int LADDER_ROW = '-';
-    private static final int LADDER_LINE = '|';
+    private static final int LADDER_LINE = '*';
     private boolean[][] connected;
 
     public Ladder(boolean[][] connected) {

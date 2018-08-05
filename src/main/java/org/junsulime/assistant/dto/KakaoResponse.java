@@ -27,11 +27,4 @@ public class KakaoResponse {
     public KakaoKeyboard getKeyboard() {
         return keyboard;
     }
-
-    public static KakaoResponse simpleTextMessage(String text) {
-        KakaoMessage message = new KakaoMessage.Builder()
-                .setText(text)
-                .build();
-        return new KakaoResponse(message);
-    }
 }

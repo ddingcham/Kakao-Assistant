@@ -1,11 +1,8 @@
 package org.junsulime.assistant.api;
 
 import org.junsulime.assistant.dto.KakaoKeyboard;
-import org.junsulime.assistant.dto.KakaoMessage;
 import org.junsulime.assistant.dto.KakaoRequest;
 import org.junsulime.assistant.dto.KakaoResponse;
-import org.junsulime.assistant.function.Function;
-import org.junsulime.assistant.function.NotSelectFunctionException;
 import org.junsulime.assistant.service.KakaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

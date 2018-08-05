@@ -1,14 +1,21 @@
 package org.junsulime.assistant.function;
 
 public class UserState {
+    private String userKey;
+
     private String function;
 
-    private int state;
+    private int phase;
 
     private String extra;
 
-    public UserState() {
+    public UserState() {}
 
+    public UserState(String userKey, String function, int phase, String extra) {
+        this.userKey = userKey;
+        this.function = function;
+        this.phase = phase;
+        this.extra = extra;
     }
 
     public String getFunction() {
@@ -19,12 +26,12 @@ public class UserState {
         this.function = function;
     }
 
-    public int getState() {
-        return state;
+    public int getPhase() {
+        return phase;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setPhase(int phase) {
+        this.phase = phase;
     }
 
     public String getExtra() {
@@ -33,5 +40,13 @@ public class UserState {
 
     public void setExtra(String extra) {
         this.extra = extra;
+    }
+
+    public String getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
     }
 }
